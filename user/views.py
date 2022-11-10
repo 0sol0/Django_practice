@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from .models import UserModel
 
 def sign_up_view(request):
@@ -19,3 +20,17 @@ def sign_up_view(request):
             new_user.bio = bio
             new_user.save()
         return redirect('/sign-in')
+
+def sign_in_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', None)
+        password = request.POST.get('password', None)
+
+        me = UserModel.objects.get(username=username)
+        if me.password == password: 
+            request.session['user'] = me.username
+            return HttpResponse("로그인 성공!")
+        else:
+            return redirect('/sign-in')
+    elif request.method == 'GET':
+        return render(request, 'user/signin.html')
