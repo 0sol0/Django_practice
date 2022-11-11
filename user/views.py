@@ -32,18 +32,17 @@ def sign_up_view(request):
                 UserModel.objects.create_user(username=username, password=password, bio=bio)
                 return redirect('/sign-in')
 
-
 def sign_in_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username', None)
-        password = request.POST.get('password', None)
+        username = request.POST.get('username', "")
+        password = request.POST.get('password', "")
 
         me = auth.authenticate(request, username=username, password=password)
         if me is not None:
             auth.login(request, me)
             return redirect('/')
         else:
-            return redirect('/sign-in')
+            return render(request,'user/signin.html',{'error':'유저이름 혹은 패스워드를 확인 해 주세요'})
     elif request.method == 'GET':
         user = request.user.is_authenticated
         if user:
@@ -54,7 +53,7 @@ def sign_in_view(request):
 @login_required
 def logout(request):
     auth.logout(request)
-    return redirect("/")# user/views.py 
+    return redirect("/") 
 
 @login_required
 def user_view(request):
