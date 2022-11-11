@@ -14,17 +14,20 @@ def sign_up_view(request):
         else:
             return render(request, 'user/signup.html')
     elif request.method == 'POST':
-        username = request.POST.get('username', None)
-        password = request.POST.get('password', None)
-        password2 = request.POST.get('password2', None)
-        bio = request.POST.get('bio', None)
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        password2 = request.POST.get('password2', '')
+        bio = request.POST.get('bio', '')
 
         if password != password2:
-            return render(request, 'user/signup.html')
+            return render(request, 'user/signup.html', {'error': '패스워드를 확인 해 주세요!'})
         else:
+            if username == '' or password == '':
+                return render(request, 'user/signup.html', {'error': '사용자 이름과 패스워드는 필수 값 입니다'})
+
             exist_user = get_user_model().objects.filter(username=username)
             if exist_user:
-                return render(request, 'user/signup.html')
+                return render(request, 'user/signup.html', {'error':'사용자가 존재합니다.'})
             else:
                 UserModel.objects.create_user(username=username, password=password, bio=bio)
                 return redirect('/sign-in')
@@ -56,6 +59,7 @@ def logout(request):
 @login_required
 def user_view(request):
     if request.method == 'GET':
+
         user_list = UserModel.objects.all().exclude(username=request.user.username)
         return render(request, 'user/user_list.html', {'user_list': user_list})
 
