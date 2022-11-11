@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.http import HttpResponse
 from .models import UserModel
@@ -47,4 +48,8 @@ def sign_in_view(request):
             return redirect('/')
         else:
             return render(request, 'user/signin.html')
-        
+
+@login_required
+def logout(request):
+    auth.logout(request)
+    return redirect("/")       
