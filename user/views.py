@@ -42,4 +42,9 @@ def sign_in_view(request):
         else:
             return redirect('/sign-in')
     elif request.method == 'GET':
-        return render(request, 'user/signin.html')
+        user = request.user.is_authenticated
+        if user:
+            return redirect('/')
+        else:
+            return render(request, 'user/signin.html')
+        
