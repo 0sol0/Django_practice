@@ -5,9 +5,14 @@ from django.http import HttpResponse
 from .models import UserModel
 
 
+
 def sign_up_view(request):
     if request.method == 'GET':
-        return render(request, 'user/signup.html')
+        user = request.user.is_authenticated
+        if user:
+            return redirect('/')
+        else:
+            return render(request, 'user/signup.html')
     elif request.method == 'POST':
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
