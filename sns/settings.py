@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'user',
     'tweet',
     
+    'taggit.apps.TaggitAppConfig',
+    'taggit_templatetags2',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -127,3 +130,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.UserModel'
+
+TAGGIT_CASE_INSENSITIVE = True
+TAGGIT_LIMIT = 50
