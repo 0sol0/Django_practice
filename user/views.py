@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from .models import UserModel
 
 
-
 def sign_up_view(request):
     if request.method == 'GET':
         user = request.user.is_authenticated
@@ -52,4 +51,21 @@ def sign_in_view(request):
 @login_required
 def logout(request):
     auth.logout(request)
-    return redirect("/")       
+    return redirect("/")# user/views.py 
+
+@login_required
+def user_view(request):
+    if request.method == 'GET':
+        user_list = UserModel.objects.all().exclude(username=request.user.username)
+        return render(request, 'user/user_list.html', {'user_list': user_list})
+
+
+@login_required
+def user_follow(request, id):
+    me = request.user
+    click_user = UserModel.objects.get(id=id)
+    if me in click_user.followee.all():
+        click_user.followee.remove(request.user)
+    else:
+        click_user.followee.add(request.user)
+    return redirect('/user')
